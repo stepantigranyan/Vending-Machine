@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./src/style.css">
+    <title>vending-machine</title>
+  </head>
+  <body>
+    <main class="h-screen flex justify-center items-center">
+      <div class="grid grid-cols-2 gap-x-10 size-[90%]">
+        <div class="bg-gray-400 grid grid-rows-[4fr_1fr] gap-y-5 p-5 border-5 border-gray-900 border-solid">
+          <div id="slot-board-container" class="h-full"></div>
+          <div class="bg-gray-600 border-5 border-gray-900 border-solid  grid grid-cols-2 gap-x-1">
+            <div id="cash-container" class="flex justify-center items-center gap-x-5"></div>
+            <div id="product-container" class="flex justify-center items-center text-white">Product</div>
+          </div>
+        </div>
+        <div class="bg-gray-600 p-5 grid grid-rows-[1fr_3fr_1fr] gap-y-5">
+          <div class="bg-gray-900 grid grid-cols-[2fr_1fr] p-1 gap-x-5">
+            <div class="bg-blue-200 grid grid-cols-2 gap-1 p-1  border border-gray-900 border-solid">
+              <div class="grid grid-rows-3 gap-1">
+                <div class="flex items-center gap-x-3">
+                  <span class="text-lg">Balance</span>
+                  <span class="text-lg" id="balance-container">0</span>
+                </div>
+                <div class="flex items-center gap-x-3">
+                  <span class="text-sm">Product</span>
+                  <span class="text-sm" id="product-code-container"></span>
+                </div>
+                <div class="flex items-center gap-x-3">
+                  <span class="text-sm">Change</span>
+                  <span class="text-xs flex items-center gap-x-2 flex-wrap" id="change-container"></span>
+                </div>
+              </div>
+              <div class="flex justify-center items-center">
+                <span class="text-xl">Error</span>
+              </div>
+            </div>
+            <button id="return-inserted-cash-button" class="cursor-pointer bg-gray-200 text-xl border border-gray-900 hover:bg-gray-300">Return</button>
+          </div>
+          <div class="bg-gray-900 grid grid-rows-1 p-1">
+            <div class="grid grid-cols-[2fr_1fr] gap-x-5 p-1">
+              <div class="grid grid-cols-3 grid-rows-2 gap-1">
+                <button data-code="A" class="code-buttons cursor-pointer bg-gray-200 text-xl border border-gray-900 hover:bg-gray-300">A</button>
+                <button data-code="B" class="code-buttons cursor-pointer bg-gray-200 text-xl border border-gray-900 hover:bg-gray-300">B</button>
+                <button data-code="C" class="code-buttons cursor-pointer bg-gray-200 text-xl border border-gray-900 hover:bg-gray-300">C</button>
+                <button data-code="1" class="code-buttons cursor-pointer bg-gray-200 text-xl border border-gray-900 hover:bg-gray-300">1</button>
+                <button data-code="2" class="code-buttons cursor-pointer bg-gray-200 text-xl border border-gray-900 hover:bg-gray-300">2</button>
+                <button data-code="3" class="code-buttons cursor-pointer bg-gray-200 text-xl border border-gray-900 hover:bg-gray-300">3</button>
+              </div>
+              <div class="grid grid-rows-2 gap-1">
+                <button id="buy-button" class="cursor-pointer bg-green-200 text-xl border border-gray-900 border-solid hover:bg-green-400">OK</button>
+                <button class="cursor-pointer bg-red-200 text-xl border border-gray-900 border-solid hover:bg-red-400">Clear</button>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-900 grid grid-cols-[2fr_1fr] grid-rows-1 gap-x-5 p-1 items-center">
+            <ul class="text-white">
+              <li class="flex justify-between items-center gap-x-3">
+                <span>50</span>
+                <span class="h-px w-full bg-white"></span>
+                <span>1</span>
+              </li>
+              <li class="flex justify-between items-center gap-x-3">
+                <span>100</span>
+                <span class="h-px w-full bg-white"></span>
+                <span>1</span>
+              </li>
+              <li class="flex justify-between items-center gap-x-3">
+                <span>200</span>
+                <span class="h-px w-full bg-white"></span>
+                <span>1</span>
+              </li>
+              <li class="flex justify-between items-center gap-x-3">
+                <span>500</span>
+                  <span class="h-px w-full bg-white"></span>
+                <span>0</span>
+              </li>
+            </ul>
+            <button class="h-full cursor-pointer bg-gray-200 text-xl border border-gray-900 hover:bg-gray-300">Refill</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
