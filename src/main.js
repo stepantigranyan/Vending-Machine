@@ -47,8 +47,11 @@ function returnInsertedCash() {
     clearTimer();
     const change = vendingService.reject.call(vendingService);
     const balance = vendingService.getBalance();
+    const ownCashes = vendingService.getOwnCashes();
+
     addBalance(balance);
     addChange(change);
+    addCashBox(ownCashes);
     removeProduct();
 }
 
@@ -73,6 +76,9 @@ function refreshBalance(e) {
     }
 
     const balance = vendingService.getBalance();
+    const ownCashes = vendingService.getOwnCashes();
+
+    addCashBox(ownCashes);
     addBalance(balance);
 }
 
@@ -122,7 +128,7 @@ function buyProduct() {
 
 function addProduct(product) {
     productContainer.innerHTML = '';
-    productContainer.innerHTML = `<img width="100" height="100" src="src/img/${product}.png" alt="${product}"/>`;
+    productContainer.innerHTML = `<img class="size-[50%]" src="src/img/${product}.png" alt="${product}"/>`;
 }
 
 function removeProduct() {
@@ -140,7 +146,7 @@ function reFill() {
     removeMessage();
     removeChange();
     removeProduct();
-    vendingService.reFill(4);
+    vendingService.reFill(5);
     const ownCashes = vendingService.getOwnCashes();
     const products = vendingService.getAllProducts();
     addCashBox(ownCashes);
@@ -174,6 +180,7 @@ function refreshCode(e) {
     vendingService.writeCode(code);
     const newCode = vendingService.getCode();
     addCode(newCode);
+    addCashBox
 }
 
 function clearCode() {

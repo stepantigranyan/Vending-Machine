@@ -18,11 +18,14 @@ class VendingMachine {
     }
 
     getOwnCashes() {
-        const ownCashes =  this.cashAcceptor.ownCash;
+        const ownCashes = this.cashAcceptor.ownCash;
         const cashes = [];
 
         for (const key in ownCashes) {
-            cashes.push({ price: ownCashes[key].cash.value, quantity: ownCashes[key].quantity });
+            cashes.push({
+                price: ownCashes[key].cash.value,
+                quantity: ownCashes[key].quantity,
+            });
         }
 
         return cashes;
@@ -36,7 +39,7 @@ class VendingMachine {
         this.message = '';
     }
 
-    getCode () {
+    getCode() {
         return this.code;
     }
 
@@ -45,7 +48,7 @@ class VendingMachine {
             return this.code;
         }
 
-        return this.code += symbol;
+        return (this.code += symbol);
     }
 
     deleteCode() {
@@ -65,9 +68,10 @@ class VendingMachine {
     buy(code) {
         try {
             const { balance } = this.cashAcceptor;
-            const { name, price } = this.list.takeOne(code, balance);
+            const { name, price } = this.list.getOne(code, balance);
 
             const change = this.cashAcceptor.changeCash(price);
+            this.list.takeOne(code);
             this.message = 'Success';
 
             return { change, product: name };

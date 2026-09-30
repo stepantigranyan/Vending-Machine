@@ -1,10 +1,9 @@
 import Cash from '../models/cash.js';
 import VendingMachineError from '../errors/error.js';
 import {CASHES} from "../../consts/consts.js";
-import cash from "../models/cash.js";
 
 class CashAcceptor {
-    constructor(insertedCash, ownCash, allCashes) {
+    constructor(insertedCash, ownCash) {
         this.insertedCash = this._initInsertedCash(insertedCash);
         this.ownCash = this._initOwnCash(ownCash);
         this.balance = this._initBalance();
@@ -44,6 +43,7 @@ class CashAcceptor {
         }
 
         this.insertedCash[cash.id].quantity++;
+        this.ownCash[cash.id].quantity++;
         this.balance += cash.value;
     }
 
@@ -52,6 +52,7 @@ class CashAcceptor {
 
         const copiedInsertedCash = JSON.parse(JSON.stringify(insertedCash));
         const copiedOwnCash = JSON.parse(JSON.stringify(ownCash));
+
         let copiedBalance = balance;
 
         const change = [];
@@ -63,27 +64,16 @@ class CashAcceptor {
         for (let i = 0; i < allCashesTypes.length; i++) {
             const cashType  = allCashesTypes[i];
 
-            if(copiedOwnCash[cashType].quantity > 0) {
-                while (copiedOwnCash[cashType].quantity > 0) {
-                    if (neededCashForChange - copiedOwnCash[cashType].cash.value >= 0) {
-                        neededCashForChange -= copiedOwnCash[cashType].cash.value;
-                        copiedOwnCash[cashType].quantity--;
-                        change.push(copiedOwnCash[cashType].cash);
-                    } else {
-                        break;
-                    }
-                }
-            } else if(copiedInsertedCash[cashType].quantity > 0) {
-                while (copiedInsertedCash[cashType].quantity > 0) {
-                    if (neededCashForChange - copiedInsertedCash[cashType].cash.value >= 0) {
-                        neededCashForChange -= copiedInsertedCash[cashType].cash.value;
-                        copiedInsertedCash[cashType].quantity--;
-                        change.push(copiedInsertedCash[cashType].cash);
-                    } else {
-                        break;
-                    }
+            while (copiedOwnCash[cashType].quantity > 0) {
+                if (neededCashForChange - copiedOwnCash[cashType].cash.value >= 0) {
+                    neededCashForChange -= copiedOwnCash[cashType].cash.value;
+                    copiedOwnCash[cashType].quantity--;
+                    change.push(copiedOwnCash[cashType].cash);
+                } else {
+                    break;
                 }
             }
+
 
             if (neededCashForChange === 0) {
                 ableGiveChange = true;
@@ -94,9 +84,10 @@ class CashAcceptor {
         if (ableGiveChange) {
             for (const cashName in copiedInsertedCash) {
                 this.insertedCash[cashName].quantity = 0;
-                this.ownCash[cashName].quantity = copiedOwnCash[cashName].quantity + copiedInsertedCash[cashName].quantity;
                 this.balance = 0;
             }
+
+            this.ownCash = copiedOwnCash;
 
             return change.map(cash => new Cash(cash));
         }
@@ -112,6 +103,7 @@ class CashAcceptor {
             for( let i = 0; i < copiedInsertedCash[key].quantity; i++) {
                 returnedCash.push(new Cash(copiedInsertedCash[key].cash));
             }
+            this.ownCash[key].quantity -= copiedInsertedCash[key].quantity;
         }
 
         for (const key in this.insertedCash) {

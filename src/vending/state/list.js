@@ -1,7 +1,6 @@
 import Product from '../models/product.js';
 import VendingMachineError from '../errors/error.js';
 
-
 class List {
     constructor(products) {
         this.list = this._initList(products);
@@ -15,14 +14,14 @@ class List {
         return this.list;
     }
 
-    takeOne(code, balance) {
-        const product = this.getOne(code);
+    getOne(code, balance) {
+        const product = this._getOne(code);
 
         if (product === undefined) {
             throw VendingMachineError.WrongCode();
         }
 
-        if(product.quantity === 0) {
+        if (product.quantity === 0) {
             throw VendingMachineError.SoldOut();
         }
 
@@ -30,16 +29,19 @@ class List {
             throw VendingMachineError.NotEnoughMoney();
         }
 
-        product.quantity--;
         return { name: product.name, price: product.price };
     }
 
-    getOne(code) {
+    takeOne(code) {
+        this._getOne(code).quantity--;
+    }
+
+    _getOne(code) {
         return this.list.find((product) => product.code === code);
     }
 
     reFillAll(quantity) {
-        this.list.forEach(product => product.quantity = quantity);
+        this.list.forEach((product) => (product.quantity = quantity));
     }
 }
 

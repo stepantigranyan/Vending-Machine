@@ -4,14 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./src/style.css">
-    <title>vending-machine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <title>Vending-machine</title>
   </head>
   <body>
-    <main class="h-screen flex justify-center items-center">
-      <div class="grid grid-cols-2 gap-x-10 size-full">
+    <main class="flex justify-center items-center">
+      <div class="grid grid-cols-2 gap-x-10">
         <div class="bg-gray-400 grid grid-rows-[4fr_1fr] gap-y-5 p-5 border-5 border-gray-900 border-solid">
           <div id="slot-board-container" class="h-full"></div>
-          <div class="bg-gray-600 border-5 border-gray-900 border-solid  grid grid-cols-2 gap-x-1">
+          <div class="bg-gray-600 border-5 border-gray-900 border-solid  grid grid-cols-[2fr_1fr] gap-x-1">
             <div id="cash-container" class="flex justify-center items-center gap-x-5 px-5"></div>
             <div id="product-container" class="flex justify-center items-center bg-gray-700"></div>
           </div>
@@ -19,7 +22,7 @@
         <div class="bg-gray-600 p-5 grid grid-rows-[1fr_3fr_1fr] gap-y-5">
           <div class="bg-gray-900 grid grid-cols-[2fr_1fr] p-1 gap-x-5">
             <div class="bg-blue-200 grid grid-cols-2 gap-1 p-1  border border-gray-900 border-solid">
-              <div class="grid grid-rows-3 gap-1">
+              <div class="grid grid-rows-3 gap-1 font-[silkscreen]">
                 <div class="flex items-center gap-x-3">
                   <span class="text-lg">Balance</span>
                   <span class="text-lg" id="balance-container">0</span>
@@ -34,7 +37,7 @@
                 </div>
               </div>
               <div class="flex justify-center items-center">
-                <span id="message-container" class="text-md"></span>
+                <span id="message-container" class="text-md font-[silkscreen]"></span>
               </div>
             </div>
             <button id="return-inserted-cash-button" class="cursor-pointer bg-gray-200 text-xl border border-gray-900 hover:bg-gray-300">Return</button>

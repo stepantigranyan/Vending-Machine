@@ -3,7 +3,7 @@ const productComponent = ({ name, price, code, quantity }) => {
 
     if (quantity > 0) {
         for (let i = 0; i < quantity; i++) {
-            images += `<img class="block size-20 absolute left-[50%] translate-x-[-50%] top-[calc(50%+${(i + 1) * 10}px)] translate-y-[-70%] z-${(i + 1) * 10}" src="src/img/${name}.png" alt="${name}"/>`
+            images += `<img class="block size-[50%] absolute left-[50%] translate-x-[-50%] top-[calc(40%+${(i + 1) * 10}px)] translate-y-[-60%] z-${(i + 1) * 10}" src="src/img/${name}.png" alt="${name}"/>`
         }
     }
 
