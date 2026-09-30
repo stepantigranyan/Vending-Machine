@@ -6,6 +6,7 @@ class VendingMachine {
         this.list = new List(products);
         this.cashAcceptor = new CashAcceptor(insertedCashes, ownCashes);
         this.code = '';
+        this.message = '';
     }
 
     getAllProducts() {
@@ -14,6 +15,25 @@ class VendingMachine {
 
     getBalance() {
         return this.cashAcceptor.balance;
+    }
+
+    getOwnCashes() {
+        const ownCashes =  this.cashAcceptor.ownCash;
+        const cashes = [];
+
+        for (const key in ownCashes) {
+            cashes.push({ price: ownCashes[key].cash.value, quantity: ownCashes[key].quantity });
+        }
+
+        return cashes;
+    }
+
+    getMessage() {
+        return this.message;
+    }
+
+    deleteMessage() {
+        this.message = '';
     }
 
     getCode () {
@@ -28,31 +48,32 @@ class VendingMachine {
         return this.code += symbol;
     }
 
-    removeCode() {
+    deleteCode() {
         this.code = '';
-        return this.code;
     }
 
     pay(cash) {
         try {
-            console.log(this)
             this.cashAcceptor.addCash(cash);
             return cash;
         } catch (error) {
-            return error;
+            this.message = error.message;
+            return undefined;
         }
     }
 
     buy(code) {
         try {
             const { balance } = this.cashAcceptor;
-            const product = this.list.takeOne(code, balance);
+            const { name, price } = this.list.takeOne(code, balance);
 
-            const change = this.cashAcceptor.changeCash(product.price);
+            const change = this.cashAcceptor.changeCash(price);
+            this.message = 'Success';
 
-            return { change, product };
+            return { change, product: name };
         } catch (error) {
-            return error;
+            this.message = error.message;
+            return undefined;
         }
     }
 
@@ -61,7 +82,7 @@ class VendingMachine {
         this.list.reFillAll(quantity);
     }
 
-    regret() {
+    reject() {
         return this.cashAcceptor.returnCash();
     }
 }

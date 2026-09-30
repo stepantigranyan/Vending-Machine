@@ -1,11 +1,14 @@
 import Cash from '../models/cash.js';
 import VendingMachineError from '../errors/error.js';
+import {CASHES} from "../../consts/consts.js";
+import cash from "../models/cash.js";
 
 class CashAcceptor {
-    constructor(insertedCash, ownCash) {
+    constructor(insertedCash, ownCash, allCashes) {
         this.insertedCash = this._initInsertedCash(insertedCash);
         this.ownCash = this._initOwnCash(ownCash);
         this.balance = this._initBalance();
+        this.allCashesTypes = CASHES.map(cash => cash.id);
     }
 
     _initInsertedCash(insertedCash) {
@@ -36,7 +39,7 @@ class CashAcceptor {
     }
 
     addCash(cash) {
-        if(this.balance + cash.value > 2000) {
+        if(cash.value > 0 && this.balance + cash.value > 2000) {
             throw VendingMachineError.NoPlaceForMoney();
         }
 
@@ -54,17 +57,31 @@ class CashAcceptor {
         const change = [];
         let neededCashForChange = copiedBalance - price;
 
-
+        const { allCashesTypes } = this;
         let ableGiveChange = false;
 
-        for (const cashName in copiedInsertedCash) {
-            while (copiedInsertedCash[cashName].quantity > 0) {
-                if (neededCashForChange - copiedInsertedCash[cashName].cash.value >= 0) {
-                    neededCashForChange -= copiedInsertedCash[cashName].cash.value;
-                    copiedInsertedCash[cashName].quantity--;
-                    change.push(copiedInsertedCash[cashName].cash);
-                } else {
-                    break;
+        for (let i = 0; i < allCashesTypes.length; i++) {
+            const cashType  = allCashesTypes[i];
+
+            if(copiedOwnCash[cashType].quantity > 0) {
+                while (copiedOwnCash[cashType].quantity > 0) {
+                    if (neededCashForChange - copiedOwnCash[cashType].cash.value >= 0) {
+                        neededCashForChange -= copiedOwnCash[cashType].cash.value;
+                        copiedOwnCash[cashType].quantity--;
+                        change.push(copiedOwnCash[cashType].cash);
+                    } else {
+                        break;
+                    }
+                }
+            } else if(copiedInsertedCash[cashType].quantity > 0) {
+                while (copiedInsertedCash[cashType].quantity > 0) {
+                    if (neededCashForChange - copiedInsertedCash[cashType].cash.value >= 0) {
+                        neededCashForChange -= copiedInsertedCash[cashType].cash.value;
+                        copiedInsertedCash[cashType].quantity--;
+                        change.push(copiedInsertedCash[cashType].cash);
+                    } else {
+                        break;
+                    }
                 }
             }
 
@@ -84,34 +101,7 @@ class CashAcceptor {
             return change.map(cash => new Cash(cash));
         }
 
-        for (const cashName in copiedOwnCash) {
-            while (copiedOwnCash[cashName].quantity > 0) {
-                if (neededCashForChange - copiedOwnCash[cashName].cash.value >= 0) {
-                    neededCashForChange -= copiedOwnCash[cashName].cash.value;
-                    copiedOwnCash[cashName].quantity--;
-                    change.push(copiedOwnCash[cashName].cash);
-                } else {
-                    break;
-                }
-            }
-
-            if (neededCashForChange === 0) {
-                ableGiveChange = true;
-                break;
-            }
-        }
-
-        if (ableGiveChange) {
-            for (const cashName in copiedOwnCash) {
-                this.insertedCash[cashName].quantity = 0;
-                this.ownCash[cashName].quantity = copiedOwnCash[cashName].quantity + copiedInsertedCash[cashName].quantity;
-                this.balance = 0;
-            }
-
-            return change.map(cash => new Cash(cash));
-        }
-
-        return VendingMachineError.NoChange();
+        throw VendingMachineError.NoChange();
     }
 
     returnCash() {
@@ -134,10 +124,8 @@ class CashAcceptor {
     }
 
     refillCash(quantity) {
-        const { cashNames } = this;
-        for ( let i = 0; i < cashNames.length; i++) {
-            const cashName = cashNames[i];
-            this.ownCash[cashName].quantity = quantity;
+        for (const key in this.ownCash) {
+            this.ownCash[key].quantity = quantity;
         }
     }
 }

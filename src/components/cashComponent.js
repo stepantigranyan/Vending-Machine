@@ -5,7 +5,8 @@ const cashComponent = ({id, value}, onPay) => {
     cash.setAttribute('id', id);
     cash.setAttribute('data-id', id);
     cash.classList.add(
-        'size-10',
+        'cursor-pointer',
+        'size-15',
         'rounded-full',
         'bg-yellow-700',
         'flex',
@@ -14,7 +15,7 @@ const cashComponent = ({id, value}, onPay) => {
         'hover:bg-yellow-900'
     );
 
-    cash.innerHTML = `<span class="text-md text-white">${value}<span>`;
+    cash.innerHTML = `<span class="text-sm text-white">${value}֏<span>`;
 
     cash.addEventListener('click', () => {
         onPay(CASHES.find((item) => item.id === id));
