@@ -1,27 +1,29 @@
-import { CASHES } from "../consts/consts.js";
+import { CASHES } from "../consts/index.js";
 
-const cashComponent = ({id, value}, onPay) => {
-    const cash = document.createElement('div')
-    cash.setAttribute('id', id);
-    cash.setAttribute('data-id', id);
-    cash.classList.add(
-        'cursor-pointer',
-        'size-15',
-        'rounded-full',
-        'bg-yellow-700',
-        'flex',
-        'justify-center',
-        'items-center',
-        'hover:bg-yellow-900'
-    );
+const cashComponent = ({ id, value }, onPay) => {
+  const cash = document.createElement("div");
+  cash.setAttribute("id", id);
+  cash.classList.add(
+    "cursor-pointer",
+    "size-15",
+    "rounded-full",
+    "border-yellow-900",
+    "border-2",
+    "bg-yellow-600",
+    "flex",
+    "justify-center",
+    "items-center",
+    "hover:bg-yellow-700",
+  );
+  cash.setAttribute("data-id", id);
 
-    cash.innerHTML = `<span class="text-sm text-white">${value}֏<span>`;
+  cash.innerHTML = `<span class="text-sm text-white">${value}֏<span>`;
 
-    cash.addEventListener('click', () => {
-        onPay(CASHES.find((item) => item.id === id));
-    })
+  cash.addEventListener("click", () => {
+    onPay(CASHES.find((cash) => cash.id === id));
+  });
 
-    return cash;
-}
+  return cash;
+};
 
 export default cashComponent;

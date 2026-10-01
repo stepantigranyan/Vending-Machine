@@ -5,11 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "lint": "eslint ./src --fix",
     "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.3.3",
+    "eslint": "^10.11.0",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.9",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.0"
   }

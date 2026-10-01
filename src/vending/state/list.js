@@ -1,48 +1,58 @@
-import Product from '../models/product.js';
-import VendingMachineError from '../errors/error.js';
+import VendingMachineError from "../errors/index.js";
+import {
+  addListToLocalStorage,
+  getListFromLocalStorage,
+} from "../middlewares/index.js";
 
 class List {
-    constructor(products) {
-        this.list = this._initList(products);
+  constructor(products) {
+    this.list = this._initList(products);
+  }
+
+  _initList(products) {
+    if (getListFromLocalStorage() === undefined) {
+      addListToLocalStorage(products);
+      return getListFromLocalStorage();
+    }
+    return getListFromLocalStorage();
+  }
+
+  getAll() {
+    this.list = getListFromLocalStorage();
+    return this.list;
+  }
+
+  getOne(code, balance) {
+    const product = this._getOne(code);
+
+    if (product === undefined) {
+      throw VendingMachineError.WrongCode();
     }
 
-    _initList(products) {
-        return products.map((product) => new Product(product));
+    if (product.quantity === 0) {
+      throw VendingMachineError.SoldOut();
     }
 
-    getAll() {
-        return this.list;
+    if (product.price > balance) {
+      throw VendingMachineError.NotEnoughMoney(product.price - balance);
     }
 
-    getOne(code, balance) {
-        const product = this._getOne(code);
+    return { name: product.name, price: product.price };
+  }
 
-        if (product === undefined) {
-            throw VendingMachineError.WrongCode();
-        }
+  takeOne(code) {
+    this._getOne(code).quantity--;
+    addListToLocalStorage(this.list);
+  }
 
-        if (product.quantity === 0) {
-            throw VendingMachineError.SoldOut();
-        }
+  _getOne(code) {
+    return this.list.find((product) => product.code === code);
+  }
 
-        if (product.price > balance) {
-            throw VendingMachineError.NotEnoughMoney();
-        }
-
-        return { name: product.name, price: product.price };
-    }
-
-    takeOne(code) {
-        this._getOne(code).quantity--;
-    }
-
-    _getOne(code) {
-        return this.list.find((product) => product.code === code);
-    }
-
-    reFillAll(quantity) {
-        this.list.forEach((product) => (product.quantity = quantity));
-    }
+  reFillAll(quantity) {
+    this.list.forEach((product) => (product.quantity = quantity));
+    addListToLocalStorage(this.list);
+  }
 }
 
 export default List;
